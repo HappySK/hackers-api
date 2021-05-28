@@ -1,0 +1,31 @@
+{
+  "name": "hackers-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start" : "nodemon index.js",
+    "dev" : "concurrently \"npm start --prefix client\" \"npm start\"",
+    "heroku-postbuild" : "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HappySK/hackers-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HappySK/hackers-api/issues"
+  },
+  "homepage": "https://github.com/HappySK/hackers-api#readme",
+  "dependencies": {
+    "concurrently": "^6.2.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.12.12",
+    "nodemon": "^2.0.7"
+  }
+}
