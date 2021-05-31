@@ -2,10 +2,15 @@ import React from "react";
 import { Form, Formik } from "formik";
 import { Box, Button } from "@material-ui/core";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
 import { FormikControl } from "../../FormikControl/FormikControl";
+import { signupaction } from "../../../actions/user";
 
 export const SignUp = () => {
+	const dispatch = useDispatch();
+
 	const initialValues = {
 		firstname: "",
 		lastname: "",
@@ -17,16 +22,26 @@ export const SignUp = () => {
 	const validationSchema = Yup.object({
 		firstname: Yup.string().required("First Name is required"),
 		lastname: Yup.string().required("Last Name is required"),
-		email: Yup.string().email().required("Email is required"),
+		email: Yup.string()
+			.email()
+			.test("Password Check", "Email Already Exists", async (email) => {
+				const {
+					data: { message },
+				} = await axios.post("/user/validateemail", { email });
+				return message !== "email exists";
+			})
+			.required("Email is required"),
 		password: Yup.string().required("Password is required"),
-		confirmpassword: Yup.string().oneOf(
-			[Yup.ref("password"), null],
-			"Password must match"
-		).required('Provide confirm password'),
+		confirmpassword: Yup.string()
+			.oneOf([Yup.ref("password"), null], "Password must match")
+			.required("Provide confirm password"),
 	});
 
-	const onSubmit = (values) => {
+	const onSubmit = (values, actions) => {
 		console.log("Sign Up Data", values);
+		dispatch(signupaction(values));
+		console.log("User added");
+		actions.resetForm();
 	};
 
 	return (
