@@ -7,6 +7,7 @@ import axios from "axios";
 
 import { FormikControl } from "../../FormikControl/FormikControl";
 import { signupaction } from "../../../actions/user";
+import { BASE_URL } from "../../../config";
 
 export const SignUp = () => {
 	const dispatch = useDispatch();
@@ -27,7 +28,7 @@ export const SignUp = () => {
 			.test("Password Check", "Email Already Exists", async (email) => {
 				const {
 					data: { message },
-				} = await axios.post("/user/validateemail", { email });
+				} = await axios.post(`${BASE_URL}/user/validateemail`, { email });
 				return message !== "email exists";
 			})
 			.required("Email is required"),
@@ -38,9 +39,7 @@ export const SignUp = () => {
 	});
 
 	const onSubmit = (values, actions) => {
-		console.log("Sign Up Data", values);
 		dispatch(signupaction(values));
-		console.log("User added");
 		actions.resetForm();
 	};
 
@@ -50,6 +49,9 @@ export const SignUp = () => {
 				initialValues={initialValues}
 				validationSchema={validationSchema}
 				onSubmit={onSubmit}
+				validateOnChange={false}
+				validateOnMount={false}
+				validateOnBlur
 			>
 				{(formik) => (
 					<Form>
@@ -84,9 +86,9 @@ export const SignUp = () => {
 								type="submit"
 								variant="contained"
 								color="primary"
-								disabled={!formik.isValid}
+								disabled={formik.isSubmitting}
 							>
-								Submit
+								{formik.isSubmitting ? `Loading` : `Submit`}
 							</Button>
 							<Button
 								type="reset"

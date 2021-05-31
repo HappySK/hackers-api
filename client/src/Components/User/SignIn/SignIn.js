@@ -5,18 +5,17 @@ import { FormikControl } from "../../FormikControl/FormikControl";
 import { Box, Button } from "@material-ui/core";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
+
 import { signInAction } from "../../../actions/user";
-import { BASE_URL } from "../../../config";
+import { BASE_URL } from '../../../config'
 
 export const SignIn = ({ history }) => {
 	const dispatch = useDispatch();
-	const state = useSelector((state) => state.userreducer);
 
 	const initialValues = {
 		email: "",
 		password: "",
 	};
-
 	const validationSchema = Yup.object({
 		email: Yup.string()
 			.email("Invalid Email Format")
@@ -24,7 +23,7 @@ export const SignIn = ({ history }) => {
 			.test("check email existence", "Email Does not exist", async (email) => {
 				const {
 					data: { message },
-				} = await axios.post("/user/validateemail", { email });
+				} = await axios.post(`${BASE_URL}/user/validateemail`, { email });
 				return message === "email exists";
 			}),
 		password: Yup.string().required("Password is required"),
@@ -40,9 +39,11 @@ export const SignIn = ({ history }) => {
 				initialValues={initialValues}
 				validationSchema={validationSchema}
 				onSubmit={onSubmit}
+				validateOnChange={false}
+				validateOnMount={false}
+				validateOnBlur
 			>
 				{(formik) => {
-					console.log(BASE_URL)
 					return (
 						<Form>
 							<FormikControl
@@ -64,7 +65,7 @@ export const SignIn = ({ history }) => {
 									color="primary"
 									disabled={formik.isSubmitting}
 								>
-									Submit
+									{formik.isSubmitting ? `Loading` : `Submit`}
 								</Button>
 								<Button
 									type="reset"
