@@ -15,8 +15,11 @@ export const signInAction = (userdata, actions) => async (dispatch) => {
 			data: { message, user },
 		} = await signin(userdata);
 		if (message === "invalid password")
-			actions.setFieldError('password','Incorrect Password')
-		else dispatch({ type: "SIGN_IN", payload: user });
+			actions.setFieldError("password", "Incorrect Password");
+		else {
+			dispatch({ type: "SIGN_IN", payload: user });
+			actions.resetForm();
+		}
 	} catch (error) {
 		console.log(error.message);
 	}
