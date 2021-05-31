@@ -1,10 +1,11 @@
 import { Formik, Form } from "formik";
 import React from "react";
 import * as Yup from "yup";
+import { Box, Button } from "@material-ui/core";
 
 import styles from "./adminform.module.css";
 import { FormikControl } from "../FormikControl/FormikControl";
-import { Box, Button } from "@material-ui/core";
+import { ADMIN_NAME, ADMIN_PASSWORD } from "../../config";
 
 export const AdminForm = () => {
 	const initialValues = {
@@ -12,8 +13,18 @@ export const AdminForm = () => {
 		adminpassword: "",
 	};
 
-	const onSubmit = (values) => {
-		console.log("Admin Data", values);
+	const onSubmit = (
+		values,
+		{ setFieldError, submitForm, resetForm, setSubmitting }
+	) => {
+		if (values.adminname !== ADMIN_NAME)
+			setFieldError("adminname", "Admin Name is not accessible");
+		else if (values.adminpassword !== ADMIN_PASSWORD)
+			setFieldError("adminpassword", "Admin Password is not valid");
+		else {
+			resetForm();
+			setSubmitting(false);
+		}
 	};
 
 	const validationSchema = Yup.object({
@@ -49,9 +60,9 @@ export const AdminForm = () => {
 								size="small"
 								variant="contained"
 								color="primary"
-								disabled={!formik.isValid}
+								disabled={formik.isSubmitting}
 							>
-								Submit
+								{formik.isSubmitting ? `Loading` : `Submit`}
 							</Button>
 							<Button
 								type="reset"
