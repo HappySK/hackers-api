@@ -11,13 +11,12 @@ export const signupaction = (user) => async (dispatch) => {
 
 export const signInAction = (userdata, actions) => async (dispatch) => {
 	try {
-		const {
-			data: { message, user },
-		} = await signin(userdata);
-		if (message === "invalid password")
+		const { data } = await signin(userdata);
+		if (data.message === "invalid password")
 			actions.setFieldError("password", "Incorrect Password");
 		else {
-			dispatch({ type: "SIGN_IN", payload: user });
+			console.log(data)
+			dispatch({ type: "SIGN_IN", payload: data });
 			actions.resetForm();
 		}
 	} catch (error) {

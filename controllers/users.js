@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 import users from "../models/users.js";
+import { JWT_SECRET } from '../config/index.js' 
 
 export const validateemail = async (req, res) => {
 	const { email } = req.body;
@@ -22,8 +24,12 @@ export const validatesignup = async (req, res) => {
 export const signin = async (req, res) => {
 	const { email, password } = req.body;
 	const user = await users.findOne({ email });
-	if (user && (await bcrypt.compare(password, user.hashpassword)))
-		return res.status(200).json({ message: "credentials verified", user : user });
+	if (user && (await bcrypt.compare(password, user.hashpassword))) {
+		const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+		return res
+			.status(200)
+			.json({ message: "credentials verified", user: user, token : token });
+	}
 	return res.status(200).json({ message: "invalid password" });
 };
 
@@ -38,5 +44,6 @@ export const signup = async (req, res) => {
 		hashpassword,
 	});
 	await user.save();
-	return res.status(200).json(user);
+	const token = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: "1h" });
+	return res.status(200).json({ user, token });
 };

@@ -6,10 +6,11 @@ import { Box, Button } from "@material-ui/core";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { signInAction } from "../../../actions/user";
+import { BASE_URL } from "../../../config";
 
 export const SignIn = ({ history }) => {
 	const dispatch = useDispatch();
-	const state = useSelector(state => state.userreducer)
+	const state = useSelector((state) => state.userreducer);
 
 	const initialValues = {
 		email: "",
@@ -30,7 +31,7 @@ export const SignIn = ({ history }) => {
 	});
 
 	const onSubmit = async (values, actions) => {
-		await dispatch(signInAction(values,actions));
+		await dispatch(signInAction(values, actions));
 	};
 
 	return (
@@ -41,6 +42,7 @@ export const SignIn = ({ history }) => {
 				onSubmit={onSubmit}
 			>
 				{(formik) => {
+					console.log(BASE_URL)
 					return (
 						<Form>
 							<FormikControl

@@ -1,9 +1,12 @@
-export const userreducer = (user = {}, action) => {
-	switch (action.type) {
+export const userreducer = (
+	oldUser = {},
+	{ type, payload }
+) => {
+	switch (type) {
 		case "SIGN_UP":
-			return { ...user, ...action.payload };
+			return { ...oldUser, ...payload.user };
 		case "SIGN_IN":
-			return { ...user, ...action.payload };
+			return { ...oldUser, ...payload.user };
 		default:
 			return {};
 	}
