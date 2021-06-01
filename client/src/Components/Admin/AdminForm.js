@@ -13,18 +13,15 @@ export const AdminForm = () => {
 		adminpassword: "",
 	};
 
-	const onSubmit = (
-		values,
-		{ setFieldError, submitForm, resetForm, setSubmitting }
-	) => {
+	const onSubmit = (values, { setFieldError, resetForm, setSubmitting }) => {
 		if (values.adminname !== ADMIN_NAME)
 			setFieldError("adminname", "Admin Name is not accessible");
 		else if (values.adminpassword !== ADMIN_PASSWORD)
 			setFieldError("adminpassword", "Admin Password is not valid");
 		else {
 			resetForm();
-			setSubmitting(false);
 		}
+		setSubmitting(false);
 	};
 
 	const validationSchema = Yup.object({
